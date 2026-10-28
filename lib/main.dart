@@ -11,10 +11,10 @@ class RestaurantMenuApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'restaurant menu',
+      title: 'Restaurant Menu',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepOrange,
+          seedColor: Colors.pink,
         ),
         useMaterial3: true,
       ),
@@ -29,42 +29,79 @@ class RestaurantMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFFF7F9),
       appBar: AppBar(
         title: const Text(
-          'restaurant menu',
+          'Restaurant Menu',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
+            fontSize: 20,
           ),
         ),
-        backgroundColor: Colors.deepOrange,
         centerTitle: true,
+        backgroundColor: Colors.pink,
+        foregroundColor: Colors.white,
+        elevation: 2,
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: const [
-          MenuCard(
-            name: 'Classic Burger',
-            description: 'Juicy beef patty with fresh vegetables.',
-            price: 'RM 18.90',
-            icon: Icons.lunch_dining,
-            color: Colors.orange,
-          ),
-          MenuCard(
-            name: 'Italian Pizza',
-            description: 'Cheesy pizza topped with tomato and basil.',
-            price: 'RM 25.90',
-            icon: Icons.local_pizza,
-            color: Colors.redAccent,
-          ),
-          MenuCard(
-            name: 'Fresh Salad',
-            description: 'A healthy mix of fresh greens and vegetables.',
-            price: 'RM 12.90',
-            icon: Icons.eco,
-            color: Colors.green,
-          ),
-        ],
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isSmallScreen = constraints.maxWidth < 360;
+
+            return ListView(
+              padding: EdgeInsets.all(
+                isSmallScreen ? 12 : 16,
+              ),
+              children: [
+                const Text(
+                  'Our Delicious Menu',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Choose your favourite meal',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                MenuCard(
+                  name: 'Classic Burger',
+                  description:
+                      'Juicy beef patty with fresh vegetables.',
+                  price: 'RM 18.90',
+                  icon: Icons.lunch_dining,
+                  color: Colors.orange,
+                  compact: isSmallScreen,
+                ),
+                MenuCard(
+                  name: 'Italian Pizza',
+                  description:
+                      'Cheesy pizza topped with tomato and basil.',
+                  price: 'RM 25.90',
+                  icon: Icons.local_pizza,
+                  color: Colors.redAccent,
+                  compact: isSmallScreen,
+                ),
+                MenuCard(
+                  name: 'Fresh Salad',
+                  description:
+                      'A healthy mix of fresh greens and vegetables.',
+                  price: 'RM 12.90',
+                  icon: Icons.eco,
+                  color: Colors.green,
+                  compact: isSmallScreen,
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -76,6 +113,7 @@ class MenuCard extends StatelessWidget {
   final String price;
   final IconData icon;
   final Color color;
+  final bool compact;
 
   const MenuCard({
     super.key,
@@ -84,38 +122,45 @@ class MenuCard extends StatelessWidget {
     required this.price,
     required this.icon,
     required this.color,
+    this.compact = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final iconRadius = compact ? 24.0 : 30.0;
+    final iconSize = compact ? 28.0 : 34.0;
+
     return Card(
-      elevation: 4,
-      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 3,
+      margin: const EdgeInsets.only(bottom: 14),
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(compact ? 12 : 16),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
-              radius: 32,
+              radius: iconRadius,
               backgroundColor: color.withAlpha(35),
               child: Icon(
                 icon,
-                size: 36,
+                size: iconSize,
                 color: color,
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: compact ? 10 : 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     name,
-                    style: const TextStyle(
-                      fontSize: 18,
+                    style: TextStyle(
+                      fontSize: compact ? 16 : 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -123,15 +168,16 @@ class MenuCard extends StatelessWidget {
                   Text(
                     description,
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: compact ? 12 : 13,
                       color: Colors.grey.shade700,
+                      height: 1.4,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     price,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: compact ? 15 : 16,
                       fontWeight: FontWeight.bold,
                       color: color,
                     ),
